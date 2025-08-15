@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = "ap-south-1"
-        ECR_REPO = "123456789012.dkr.ecr.ap-south-1.amazonaws.com/my-app"
+        AWS_REGION = "eu-north-1"
+        ECR_REPO = "417744795688.dkr.ecr.eu-north-1.amazonaws.com/sns-py-api"
         IMAGE_TAG = "${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}"
     }
 
     stages {
         stage('Clone Git Repo') {
             steps {
-                git branch: 'main', url: 'https://github.com/<your-username>/my-app.git'
+                git branch: 'main', url: 'https://github.com/rohithganisetti/my-jenkins-app.git'
             }
         }
 
