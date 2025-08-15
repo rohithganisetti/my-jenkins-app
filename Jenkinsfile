@@ -16,17 +16,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
-                }
+                sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
             }
         }
 
         stage('Push to AWS ECR') {
             steps {
-                script {
-                    sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}"
-                    sh "docker push ${ECR_REPO}:${IMAGE_TAG}"
+                // Use AWS credentials stored in Jenkins
+                withAWS(credentials: 'aws-ecr-creds', region: "${AWS_REGION}") {
+                    sh '''
+                        aws ecr get-login-password --region ${AWS_REGION} \
+                        | docker login --username AWS --password-stdin ${ECR_REPO}
+                        docker push ${ECR_REPO}:${IMAGE_TAG}
+                    '''
                 }
             }
         }
