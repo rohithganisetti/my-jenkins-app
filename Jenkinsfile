@@ -3,8 +3,9 @@ pipeline {
 
     environment {
         AWS_REGION = "eu-north-1"
-        ECR_REPO = "417744795688.dkr.ecr.eu-north-1.amazonaws.com/sns-py-api"
-        IMAGE_TAG = "${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}"
+        ECR_REPO   = "417744795688.dkr.ecr.eu-north-1.amazonaws.com/sns-py-api"
+        IMAGE_TAG  = "${env.BUILD_NUMBER}-${env.GIT_COMMIT.take(7)}"
+        CONTAINER_NAME = "sns-api"
     }
 
     stages {
@@ -37,12 +38,12 @@ pipeline {
                 sshagent(['SSH-RohithGanisetti']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@51.21.192.234 "
-                            docker stop sns-api || true &&
-                            docker rm sns-api || true &&
+                            docker stop ${CONTAINER_NAME} || true &&
+                            docker rm ${CONTAINER_NAME} || true &&
                             aws ecr get-login-password --region ${AWS_REGION} \
                             | docker login --username AWS --password-stdin ${ECR_REPO} &&
                             docker pull ${ECR_REPO}:${IMAGE_TAG} &&
-                            docker run -d -p 5000:80 --name sns-api ${ECR_REPO}:${IMAGE_TAG}
+                            docker run -d -p 5000:80 --name ${CONTAINER_NAME} ${ECR_REPO}:${IMAGE_TAG}
                         "
                     '''
                 }
