@@ -34,7 +34,7 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(['key-04144c3e6a51dde86']) {
+                sshagent(['SSH-RohithGanisetti']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@13.51.169.198 "
                             docker stop \$(docker ps -q --filter ancestor=${ECR_REPO}:${IMAGE_TAG}) || true &&
