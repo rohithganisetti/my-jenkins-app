@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sshagent(['SSH-RohithGanisetti']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@13.51.169.198 "
+                        ssh -o StrictHostKeyChecking=no ec2-user@16.171.162.217 "
                             docker stop \$(docker ps -q --filter ancestor=${ECR_REPO}:${IMAGE_TAG}) || true &&
                             docker rm \$(docker ps -aq --filter ancestor=${ECR_REPO}:${IMAGE_TAG}) || true &&
                             aws ecr get-login-password --region ${AWS_REGION} \
