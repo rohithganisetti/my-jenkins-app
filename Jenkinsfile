@@ -37,12 +37,12 @@ pipeline {
                 sshagent(['SSH-RohithGanisetti']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@51.21.192.234 "
-                            docker stop \$(docker ps -q --filter ancestor=${ECR_REPO}:${IMAGE_TAG}) || true &&
-                            docker rm \$(docker ps -aq --filter ancestor=${ECR_REPO}:${IMAGE_TAG}) || true &&
+                            docker stop sns-api || true &&
+                            docker rm sns-api || true &&
                             aws ecr get-login-password --region ${AWS_REGION} \
                             | docker login --username AWS --password-stdin ${ECR_REPO} &&
                             docker pull ${ECR_REPO}:${IMAGE_TAG} &&
-                            docker run -d -p 5000:80 ${ECR_REPO}:${IMAGE_TAG}
+                            docker run -d -p 5000:80 --name sns-api ${ECR_REPO}:${IMAGE_TAG}
                         "
                     '''
                 }
